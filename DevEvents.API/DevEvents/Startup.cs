@@ -32,7 +32,8 @@ namespace DevEvents
             services.AddControllers();
 
             var connectionString = Configuration.GetConnectionString("DevEventsCn");
-            services.AddDbContext<DevEventsDbContext>(options => options.UseSqlServer(connectionString));
+            //services.AddDbContext<DevEventsDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DevEventsDbContext>(options => options.UseInMemoryDatabase("DevEvents"));
 
             services.AddSwaggerGen(c =>
             {

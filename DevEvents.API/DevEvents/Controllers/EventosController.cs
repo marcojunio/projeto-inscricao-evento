@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
+using Dapper;
 
 namespace DevEvents.Controllers
 {
@@ -65,9 +67,18 @@ namespace DevEvents.Controllers
         [HttpDelete("{id}")]
         public IActionResult Cancelar(int id)
         {
+            //var connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
+
+            //using (var sqlConnection = new SqlConnection(connectionString))
+            //{
+            //    var script = "UPDATE Eventos SET Ativo = 0 WHERE Id = @id";
+
+            //    sqlConnection.Execute(script,new {id});
+            //}
+             
             var evento = _dbContext.Eventos.Find(id);
-            
-            if(evento == null)
+
+            if (evento == null)
             {
                 return NotFound();
             }
@@ -81,6 +92,16 @@ namespace DevEvents.Controllers
         [HttpPost("{id}/usuarios/{idUsuario}/inscrever")]
         public IActionResult Inscrever(int id, int idUsuario, [FromBody] Inscricao inscricao)
         {
+            var evento = _dbContext.Eventos.SingleOrDefault(e => e.Id == id);
+
+            if (!evento.Ativo)
+            {
+                return BadRequest();
+            }
+
+            _dbContext.Inscricoes.Add(inscricao);
+            _dbContext.SaveChanges();
+
             return NoContent();
         }
 

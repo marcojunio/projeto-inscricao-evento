@@ -1,6 +1,9 @@
-﻿ using DevEvents.Entidades;
+﻿using Dapper;
+using DevEvents.Entidades;
 using DevEvents.Persistencia;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +23,20 @@ namespace DevEvents.Controllers
         [HttpGet]
         public IActionResult ListarTodas()
         {
-            var categorias = _dbContext.Categorias.ToList();
+            //var connectionString = _dbContext.Database.GetDbConnection().ConnectionString;
 
-            return Ok(categorias);
+            //using (var sqlConnection = new SqlConnection(connectionString))
+            //{
+            //    var script = "SELECT Id,Descricao FROM Categorias";
+
+            //    var categorias = sqlConnection.Query<Categoria>(script);
+
+            //    return Ok(categorias);
+            //}
+
+            var categoria = _dbContext.Categorias.ToList();
+
+            return Ok(categoria);
         }
         
         [HttpGet("{id}")]

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevEvents.Persistencia.Migrations
 {
     [DbContext(typeof(DevEventsDbContext))]
-    [Migration("20210203224849_initial")]
-    partial class initial
+    [Migration("20210204143741_Initital")]
+    partial class Initital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,6 +77,28 @@ namespace DevEvents.Persistencia.Migrations
                     b.ToTable("Eventos");
                 });
 
+            modelBuilder.Entity("DevEvents.Entidades.Inscricao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("IdEvento")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUsuario")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdEvento");
+
+                    b.HasIndex("IdUsuario");
+
+                    b.ToTable("Inscricoes");
+                });
+
             modelBuilder.Entity("DevEvents.Entidades.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -121,6 +143,35 @@ namespace DevEvents.Persistencia.Migrations
                     b.Navigation("Categoria");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("DevEvents.Entidades.Inscricao", b =>
+                {
+                    b.HasOne("DevEvents.Entidades.Evento", "Evento")
+                        .WithMany("Inscricoes")
+                        .HasForeignKey("IdEvento")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DevEvents.Entidades.Usuario", "Usuario")
+                        .WithMany("Inscricoes")
+                        .HasForeignKey("IdUsuario")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Evento");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("DevEvents.Entidades.Evento", b =>
+                {
+                    b.Navigation("Inscricoes");
+                });
+
+            modelBuilder.Entity("DevEvents.Entidades.Usuario", b =>
+                {
+                    b.Navigation("Inscricoes");
                 });
 #pragma warning restore 612, 618
         }
