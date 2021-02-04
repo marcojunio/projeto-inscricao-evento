@@ -8,7 +8,7 @@ namespace DevEvents.Entidades
     public class Evento
     {
         public int Id { get; set; }
-        public int Titulo { get; set; }
+        public string Titulo { get; set; }
         public string Descricao { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
@@ -18,5 +18,6 @@ namespace DevEvents.Entidades
         public Usuario Usuario { get; set; }
         public int IdCategoria { get; set; }
         public int IdUsuario { get; set; }
+        public List<Inscricao> Inscricoes { get; set; }
     }
 }

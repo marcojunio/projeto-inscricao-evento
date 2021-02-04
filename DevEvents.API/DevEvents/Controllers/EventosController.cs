@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevEvents.Controllers
 {
@@ -20,7 +21,12 @@ namespace DevEvents.Controllers
         [HttpGet]
         public IActionResult ObterEventos()
         {
-            var eventos = _dbContext.Eventos.ToList();
+            var eventos = _dbContext.Eventos
+                .Include(e => e.Categoria)
+                .Include(e => e.Usuario)
+                .Include(e => e.Inscricoes)
+                .ToList();
+
             return Ok(eventos);
         }
 
@@ -41,9 +47,17 @@ namespace DevEvents.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Atualizar(int id, [FromBody] Evento evento)
+        [HttpPut]
+        public IActionResult Atualizar([FromBody] Evento evento)
         {
+            _dbContext.Eventos.Update(evento);
+
+            _dbContext.Entry(evento).Property(e => e.DataCadastro).IsModified = false;
+            _dbContext.Entry(evento).Property(e => e.Ativo).IsModified = false;
+            _dbContext.Entry(evento).Property(e => e.IdUsuario).IsModified = false;
+
+            _dbContext.SaveChanges();
+
             return NoContent();
         }
 
@@ -51,6 +65,16 @@ namespace DevEvents.Controllers
         [HttpDelete("{id}")]
         public IActionResult Cancelar(int id)
         {
+            var evento = _dbContext.Eventos.Find(id);
+            
+            if(evento == null)
+            {
+                return NotFound();
+            }
+
+            evento.Ativo = false;
+            _dbContext.SaveChanges();
+
             return NoContent();
         }
 

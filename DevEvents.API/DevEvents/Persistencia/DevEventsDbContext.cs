@@ -16,6 +16,7 @@ namespace DevEvents.Persistencia
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Inscricao> Inscricoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +42,21 @@ namespace DevEvents.Persistencia
 
             modelBuilder.Entity<Categoria>()
                 .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Inscricao>()
+                .HasKey(e => e.Id);
+
+            modelBuilder.Entity<Inscricao>()
+                .HasOne(i => i.Evento)
+                .WithMany(e => e.Inscricoes)
+                .HasForeignKey(e => e.IdEvento)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Inscricao>()
+                .HasOne(i => i.Usuario)
+                .WithMany(e => e.Inscricoes)
+                .HasForeignKey(e => e.IdUsuario)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
