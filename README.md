@@ -1,4 +1,4 @@
-## Api para criação de um evento de determinada categoria
+## Api para criação de um evento de determinada categoria com inscrição de usuários
 
 ### Tecnlogias usadas 
 - Asp.Core 5.0
